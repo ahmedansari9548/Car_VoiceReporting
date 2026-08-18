@@ -1,0 +1,223 @@
+{
+  "cities": [
+    "Lahore", "Karachi", "Islamabad", "Rawalpindi", "Faisalabad",
+    "Multan", "Peshawar", "Gujranwala", "Sialkot", "Sargodha",
+    "Hyderabad", "Bahawalpur", "Abbottabad", "Quetta", "Gujrat",
+    "Jhelum", "Sahiwal", "Mardan", "Sheikhupura", "Mirpur A.K."
+  ],
+
+  "registration_options": [
+    "Lahore", "Karachi", "Islamabad", "Rawalpindi", "Faisalabad",
+    "Multan", "Peshawar", "Gujranwala", "Sialkot",
+    "Punjab", "Sindh", "KPK", "Balochistan", "Islamabad Capital", "AJK",
+    "Un-Registered"
+  ],
+
+  "models": [
+    {
+      "make": "Toyota",
+      "model": "Corolla",
+      "body_type": "Sedan",
+      "assembly": "Local",
+      "aliases": ["corolla", "korola", "karola"],
+      "variants": [
+        {"name": "XLI", "years": [2009, 2022], "cc": 1300, "fuel": "Petrol", "transmission": "Manual", "features": ["Power Steering", "Power Windows", "Air Conditioning", "Immobilizer Key"]},
+        {"name": "GLI", "years": [2009, 2022], "cc": 1300, "fuel": "Petrol", "transmission": "any", "features": ["Power Steering", "Power Windows", "Air Conditioning", "ABS", "Air Bags", "Alloy Rims"]},
+        {"name": "Altis 1.6", "years": [2014, 2024], "cc": 1600, "fuel": "Petrol", "transmission": "any", "features": ["Power Steering", "Power Windows", "Climate Control", "ABS", "Air Bags", "Alloy Rims", "Keyless Entry"]},
+        {"name": "Altis Grande", "years": [2014, 2024], "cc": 1800, "fuel": "Petrol", "transmission": "Automatic", "features": ["Power Steering", "Power Windows", "Climate Control", "ABS", "Air Bags", "Alloy Rims", "Keyless Entry", "Cruise Control", "Navigation System", "Rear Camera"]},
+        {"name": "Altis X 1.6", "years": [2021, 2026], "cc": 1600, "fuel": "Petrol", "transmission": "Automatic", "features": ["Power Steering", "Climate Control", "ABS", "Air Bags", "Alloy Rims", "Cruise Control"]}
+      ]
+    },
+    {
+      "make": "Honda",
+      "model": "Civic",
+      "body_type": "Sedan",
+      "assembly": "Local",
+      "aliases": ["civic", "sivic", "civik"],
+      "variants": [
+        {"name": "VTi", "years": [2012, 2021], "cc": 1800, "fuel": "Petrol", "transmission": "any", "features": ["Power Steering", "Power Windows", "Climate Control", "ABS", "Air Bags", "Alloy Rims"]},
+        {"name": "VTi Oriel", "years": [2012, 2021], "cc": 1800, "fuel": "Petrol", "transmission": "Automatic", "features": ["Power Steering", "Power Windows", "Climate Control", "ABS", "Air Bags", "Alloy Rims", "Cruise Control", "Keyless Entry", "Sun Roof"]},
+        {"name": "VTi Oriel UG", "years": [2019, 2021], "cc": 1500, "fuel": "Petrol", "transmission": "Automatic", "features": ["Power Steering", "Climate Control", "ABS", "Air Bags", "Alloy Rims", "Cruise Control", "Keyless Entry", "Sun Roof", "Navigation System", "Rear Camera", "Steering Switches"]},
+        {"name": "RS Turbo 1.5", "years": [2016, 2021], "cc": 1500, "fuel": "Petrol", "transmission": "Automatic", "features": ["Power Steering", "Climate Control", "ABS", "Air Bags", "Alloy Rims", "Cruise Control", "Keyless Entry", "Sun Roof", "Navigation System", "Rear Camera"]},
+        {"name": "Oriel", "years": [2022, 2026], "cc": 1500, "fuel": "Petrol", "transmission": "Automatic", "features": ["Power Steering", "Climate Control", "ABS", "Air Bags", "Alloy Rims", "Cruise Control", "Keyless Entry", "Sun Roof", "Navigation System", "Rear Camera"]}
+      ]
+    },
+    {
+      "make": "Honda",
+      "model": "City",
+      "body_type": "Sedan",
+      "assembly": "Local",
+      "aliases": ["city", "siti"],
+      "variants": [
+        {"name": "1.3 i-VTEC", "years": [2009, 2021], "cc": 1300, "fuel": "Petrol", "transmission": "any", "features": ["Power Steering", "Power Windows", "Air Conditioning", "Immobilizer Key"]},
+        {"name": "Aspire 1.5", "years": [2009, 2021], "cc": 1500, "fuel": "Petrol", "transmission": "Automatic", "features": ["Power Steering", "Power Windows", "Climate Control", "ABS", "Air Bags", "Alloy Rims"]},
+        {"name": "1.2L CVT", "years": [2021, 2026], "cc": 1200, "fuel": "Petrol", "transmission": "Automatic", "features": ["Power Steering", "Power Windows", "Air Conditioning", "ABS", "Air Bags"]},
+        {"name": "1.5L CVT Aspire", "years": [2021, 2026], "cc": 1500, "fuel": "Petrol", "transmission": "Automatic", "features": ["Power Steering", "Climate Control", "ABS", "Air Bags", "Alloy Rims", "Cruise Control", "Keyless Entry"]}
+      ]
+    },
+    {
+      "make": "Suzuki",
+      "model": "Cultus",
+      "body_type": "Hatchback",
+      "assembly": "Local",
+      "aliases": ["cultus", "kaltus"],
+      "variants": [
+        {"name": "VXR", "years": [2017, 2026], "cc": 1000, "fuel": "Petrol", "transmission": "Manual", "features": ["Power Steering", "Power Windows", "Air Conditioning"]},
+        {"name": "VXL", "years": [2017, 2026], "cc": 1000, "fuel": "Petrol", "transmission": "Manual", "features": ["Power Steering", "Power Windows", "Air Conditioning", "ABS", "Air Bags", "Alloy Rims"]},
+        {"name": "AGS", "years": [2018, 2026], "cc": 1000, "fuel": "Petrol", "transmission": "Automatic", "features": ["Power Steering", "Power Windows", "Air Conditioning", "ABS", "Air Bags", "Alloy Rims"]},
+        {"name": "VXRi", "years": [2007, 2016], "cc": 1000, "fuel": "Petrol", "transmission": "Manual", "features": ["Power Steering", "Power Windows", "Air Conditioning"]}
+      ]
+    },
+    {
+      "make": "Suzuki",
+      "model": "Alto",
+      "body_type": "Hatchback",
+      "assembly": "Local",
+      "aliases": ["alto"],
+      "variants": [
+        {"name": "VX", "years": [2019, 2026], "cc": 660, "fuel": "Petrol", "transmission": "Manual", "features": ["Air Conditioning"]},
+        {"name": "VXR", "years": [2019, 2026], "cc": 660, "fuel": "Petrol", "transmission": "Manual", "features": ["Power Steering", "Power Windows", "Air Conditioning"]},
+        {"name": "VXL AGS", "years": [2019, 2026], "cc": 660, "fuel": "Petrol", "transmission": "Automatic", "features": ["Power Steering", "Power Windows", "Air Conditioning", "ABS", "Air Bags", "Alloy Rims"]}
+      ]
+    },
+    {
+      "make": "Suzuki",
+      "model": "Wagon R",
+      "body_type": "Hatchback",
+      "assembly": "Local",
+      "aliases": ["wagon r", "wagonr", "wagon-r"],
+      "variants": [
+        {"name": "VXR", "years": [2014, 2026], "cc": 1000, "fuel": "Petrol", "transmission": "Manual", "features": ["Power Steering", "Power Windows", "Air Conditioning"]},
+        {"name": "VXL", "years": [2014, 2026], "cc": 1000, "fuel": "Petrol", "transmission": "Manual", "features": ["Power Steering", "Power Windows", "Air Conditioning", "Alloy Rims"]},
+        {"name": "AGS", "years": [2020, 2026], "cc": 1000, "fuel": "Petrol", "transmission": "Automatic", "features": ["Power Steering", "Power Windows", "Air Conditioning", "ABS", "Air Bags"]}
+      ]
+    },
+    {
+      "make": "Suzuki",
+      "model": "Swift",
+      "body_type": "Hatchback",
+      "assembly": "Local",
+      "aliases": ["swift"],
+      "variants": [
+        {"name": "DLX", "years": [2010, 2021], "cc": 1300, "fuel": "Petrol", "transmission": "Manual", "features": ["Power Steering", "Power Windows", "Air Conditioning", "Alloy Rims"]},
+        {"name": "GLX CVT", "years": [2022, 2026], "cc": 1200, "fuel": "Petrol", "transmission": "Automatic", "features": ["Power Steering", "Power Windows", "Climate Control", "ABS", "Air Bags", "Alloy Rims", "Cruise Control"]}
+      ]
+    },
+    {
+      "make": "Suzuki",
+      "model": "Mehran",
+      "body_type": "Hatchback",
+      "assembly": "Local",
+      "aliases": ["mehran", "meharan"],
+      "variants": [
+        {"name": "VX", "years": [1989, 2019], "cc": 800, "fuel": "Petrol", "transmission": "Manual", "features": []},
+        {"name": "VXR", "years": [1989, 2019], "cc": 800, "fuel": "Petrol", "transmission": "Manual", "features": ["Air Conditioning"]}
+      ]
+    },
+    {
+      "make": "Toyota",
+      "model": "Vitz",
+      "body_type": "Hatchback",
+      "assembly": "Imported",
+      "aliases": ["vitz", "vits", "wits"],
+      "variants": [
+        {"name": "F", "years": [2010, 2020], "cc": 1000, "fuel": "Petrol", "transmission": "Automatic", "features": ["Power Steering", "Power Windows", "Air Conditioning"]},
+        {"name": "Jewela", "years": [2010, 2020], "cc": 1000, "fuel": "Petrol", "transmission": "Automatic", "features": ["Power Steering", "Power Windows", "Air Conditioning", "Keyless Entry"]},
+        {"name": "F Safety Edition", "years": [2014, 2020], "cc": 1000, "fuel": "Petrol", "transmission": "Automatic", "features": ["Power Steering", "Power Windows", "Air Conditioning", "ABS", "Air Bags"]},
+        {"name": "Hybrid", "years": [2017, 2020], "cc": 1500, "fuel": "Hybrid", "transmission": "Automatic", "features": ["Power Steering", "Climate Control", "ABS", "Air Bags", "Keyless Entry"]}
+      ]
+    },
+    {
+      "make": "Toyota",
+      "model": "Prius",
+      "body_type": "Hatchback",
+      "assembly": "Imported",
+      "aliases": ["prius", "prias"],
+      "variants": [
+        {"name": "S", "years": [2009, 2021], "cc": 1800, "fuel": "Hybrid", "transmission": "Automatic", "features": ["Power Steering", "Climate Control", "ABS", "Air Bags", "Alloy Rims", "Keyless Entry"]},
+        {"name": "G", "years": [2009, 2021], "cc": 1800, "fuel": "Hybrid", "transmission": "Automatic", "features": ["Power Steering", "Climate Control", "ABS", "Air Bags", "Alloy Rims", "Keyless Entry", "Navigation System"]},
+        {"name": "S Touring", "years": [2015, 2021], "cc": 1800, "fuel": "Hybrid", "transmission": "Automatic", "features": ["Power Steering", "Climate Control", "ABS", "Air Bags", "Alloy Rims", "Cruise Control", "Navigation System"]}
+      ]
+    },
+    {
+      "make": "Toyota",
+      "model": "Aqua",
+      "body_type": "Hatchback",
+      "assembly": "Imported",
+      "aliases": ["aqua"],
+      "variants": [
+        {"name": "S", "years": [2012, 2021], "cc": 1500, "fuel": "Hybrid", "transmission": "Automatic", "features": ["Power Steering", "Climate Control", "ABS", "Air Bags", "Keyless Entry"]},
+        {"name": "G", "years": [2012, 2021], "cc": 1500, "fuel": "Hybrid", "transmission": "Automatic", "features": ["Power Steering", "Climate Control", "ABS", "Air Bags", "Alloy Rims", "Keyless Entry", "Navigation System"]}
+      ]
+    },
+    {
+      "make": "Toyota",
+      "model": "Yaris",
+      "body_type": "Sedan",
+      "assembly": "Local",
+      "aliases": ["yaris", "yarris"],
+      "variants": [
+        {"name": "GLI 1.3 MT", "years": [2020, 2026], "cc": 1300, "fuel": "Petrol", "transmission": "Manual", "features": ["Power Steering", "Power Windows", "Air Conditioning", "ABS", "Air Bags"]},
+        {"name": "ATIV 1.3 CVT", "years": [2020, 2026], "cc": 1300, "fuel": "Petrol", "transmission": "Automatic", "features": ["Power Steering", "Power Windows", "Air Conditioning", "ABS", "Air Bags", "Alloy Rims"]},
+        {"name": "ATIV X 1.5 CVT", "years": [2020, 2026], "cc": 1500, "fuel": "Petrol", "transmission": "Automatic", "features": ["Power Steering", "Climate Control", "ABS", "Air Bags", "Alloy Rims", "Cruise Control", "Keyless Entry", "Rear Camera"]}
+      ]
+    },
+    {
+      "make": "Honda",
+      "model": "BR-V",
+      "body_type": "Crossover",
+      "assembly": "Local",
+      "aliases": ["br-v", "brv", "br v"],
+      "variants": [
+        {"name": "i-VTEC S", "years": [2017, 2026], "cc": 1500, "fuel": "Petrol", "transmission": "Automatic", "seating": 7, "features": ["Power Steering", "Power Windows", "Climate Control", "ABS", "Air Bags", "Alloy Rims", "Rear AC Vents"]}
+      ]
+    },
+    {
+      "make": "KIA",
+      "model": "Sportage",
+      "body_type": "SUV",
+      "assembly": "Local",
+      "aliases": ["sportage", "sportaj"],
+      "variants": [
+        {"name": "Alpha", "years": [2019, 2026], "cc": 2000, "fuel": "Petrol", "transmission": "Automatic", "features": ["Power Steering", "Climate Control", "ABS", "Air Bags", "Alloy Rims", "Cruise Control", "Rear Camera"]},
+        {"name": "FWD", "years": [2019, 2026], "cc": 2000, "fuel": "Petrol", "transmission": "Automatic", "features": ["Power Steering", "Climate Control", "ABS", "Air Bags", "Alloy Rims", "Cruise Control", "Sun Roof", "Rear Camera", "Navigation System"]},
+        {"name": "AWD", "years": [2019, 2026], "cc": 2000, "fuel": "Petrol", "transmission": "Automatic", "features": ["Power Steering", "Climate Control", "ABS", "Air Bags", "Alloy Rims", "Cruise Control", "Sun Roof", "Rear Camera", "Navigation System"]}
+      ]
+    },
+    {
+      "make": "Changan",
+      "model": "Alsvin",
+      "body_type": "Sedan",
+      "assembly": "Local",
+      "aliases": ["alsvin", "alswin", "alsvine"],
+      "variants": [
+        {"name": "1.3 Comfort MT", "years": [2021, 2026], "cc": 1300, "fuel": "Petrol", "transmission": "Manual", "features": ["Power Steering", "Power Windows", "Air Conditioning", "ABS", "Air Bags"]},
+        {"name": "1.3 Comfort DCT", "years": [2021, 2026], "cc": 1300, "fuel": "Petrol", "transmission": "Automatic", "features": ["Power Steering", "Power Windows", "Air Conditioning", "ABS", "Air Bags", "Alloy Rims"]},
+        {"name": "1.5 Lumiere", "years": [2021, 2026], "cc": 1500, "fuel": "Petrol", "transmission": "Automatic", "features": ["Power Steering", "Climate Control", "ABS", "Air Bags", "Alloy Rims", "Cruise Control", "Keyless Entry", "Rear Camera", "Sun Roof"]}
+      ]
+    },
+    {
+      "make": "Toyota",
+      "model": "Fortuner",
+      "body_type": "SUV",
+      "assembly": "Local",
+      "aliases": ["fortuner", "forchuner"],
+      "variants": [
+        {"name": "2.7 G", "years": [2016, 2026], "cc": 2700, "fuel": "Petrol", "transmission": "Automatic", "seating": 7, "features": ["Power Steering", "Climate Control", "ABS", "Air Bags", "Alloy Rims", "Cruise Control", "Rear Camera"]},
+        {"name": "Sigma 4", "years": [2016, 2026], "cc": 2800, "fuel": "Diesel", "transmission": "Automatic", "seating": 7, "features": ["Power Steering", "Climate Control", "ABS", "Air Bags", "Alloy Rims", "Cruise Control", "Rear Camera", "Navigation System"]},
+        {"name": "Legender", "years": [2021, 2026], "cc": 2800, "fuel": "Diesel", "transmission": "Automatic", "seating": 7, "features": ["Power Steering", "Climate Control", "ABS", "Air Bags", "Alloy Rims", "Cruise Control", "Rear Camera", "Navigation System", "Sun Roof"]}
+      ]
+    },
+    {
+      "make": "Hyundai",
+      "model": "Tucson",
+      "body_type": "SUV",
+      "assembly": "Local",
+      "aliases": ["tucson", "tuscon", "tuxon"],
+      "variants": [
+        {"name": "GLS Sport", "years": [2020, 2026], "cc": 2000, "fuel": "Petrol", "transmission": "Automatic", "features": ["Power Steering", "Climate Control", "ABS", "Air Bags", "Alloy Rims", "Cruise Control", "Rear Camera"]},
+        {"name": "Ultimate", "years": [2020, 2026], "cc": 2000, "fuel": "Petrol", "transmission": "Automatic", "features": ["Power Steering", "Climate Control", "ABS", "Air Bags", "Alloy Rims", "Cruise Control", "Rear Camera", "Sun Roof", "Navigation System"]}
+      ]
+    }
+  ]
+}

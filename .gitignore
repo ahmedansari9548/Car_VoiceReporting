@@ -1,0 +1,76 @@
+# ===========================
+# Python
+# ===========================
+__pycache__/
+*.py[cod]
+*$py.class
+
+# Virtual Environment
+venv/
+.venv/
+env/
+ENV/
+
+# Environment Variables
+.env
+.env.*
+!.env.example
+
+# Logs
+*.log
+logs/
+
+# Coverage
+.coverage
+htmlcov/
+.pytest_cache/
+
+# IDE
+.vscode/
+.idea/
+*.swp
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Database
+*.db
+*.sqlite3
+
+# Build
+build/
+dist/
+*.egg-info/
+
+# mypy
+.mypy_cache/
+
+# Ruff
+.ruff_cache/
+
+# Pyright
+.pyright/
+
+# Docker
+docker-compose.override.yml
+
+# Uploaded files
+uploads/
+temp/
+tmp/
+
+# Audio files
+*.wav
+*.mp3
+*.webm
+
+# Generated listings
+generated/
+
+# ngrok
+.ngrok2/
+
+# Secrets
+*.pem
+*.key
