@@ -1,10 +1,47 @@
-fastapi==0.115.0
-uvicorn[standard]==0.30.0
-pydantic==2.8.0
-pydantic-settings==2.4.0
-openai==1.40.0
-python-multipart==0.0.9
-python-dotenv==1.0.1
-psycopg2-binary==2.9.9
-requests==2.32.3
-httpx<0.28
+# PakWheels Voice Agent — Python 3.14.x
+# Install:  pip install -r requirements.txt
+
+# ── Web framework ──
+fastapi>=0.118.0
+uvicorn[standard]>=0.37.0
+python-multipart>=0.0.20          # audio file uploads for /transcribe
+
+# ── Validation / config ──
+pydantic>=2.13.0
+pydantic-settings>=2.7.0          # BaseSettings lives here in Pydantic v2
+python-dotenv>=1.0.1
+
+# ── Database (PostgreSQL) ──
+# psycopg2-binary has no cp314 wheels — psycopg v3 is the maintained path.
+# See migration note at the bottom of this file.
+psycopg[binary,pool]>=3.2.4
+
+# ── LLM / STT (Groq via OpenAI-compatible client) ──
+openai>=1.60.0
+httpx>=0.28.1
+
+# ── Testing ──
+pytest>=8.3.4
+pytest-asyncio>=0.25.2
+
+# ─────────────────────────────────────────────────────────────
+# PSYCOPG 2 → 3 MIGRATION
+#
+# Your session_repo.py currently imports psycopg2. On Python 3.14 you
+# have two options:
+#
+# OPTION A — switch to psycopg 3 (recommended, keep the line above):
+#     import psycopg
+#     from psycopg.rows import dict_row
+#
+#     # old: conn.cursor(cursor_factory=psycopg2.extras.RealDictCursor)
+#     # new: conn.cursor(row_factory=dict_row)
+#
+#     Everything else (execute, fetchone, commit) works unchanged.
+#
+# OPTION B — stay on psycopg2. Replace the psycopg line above with:
+#     psycopg2-binary>=2.9.10
+#     ...and if pip fails to find a wheel, you'll need build tools:
+#         Ubuntu:  sudo apt install libpq-dev python3-dev gcc
+#         Windows: install PostgreSQL, then pip install psycopg2
+# ─────────────────────────────────────────────────────────────

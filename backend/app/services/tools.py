@@ -218,7 +218,7 @@ DETERMINE_ACTION_SCHEMA = {
                 "type": "string",
                 "description": "The reply to send. Must follow REPLY_LANGUAGE strictly.",
             },
-            "detected_language": {"type": "string", "enum": ["en", "ur", "roman_urdu"]},
+            "detected_language": {"type": "string", "enum": ["en", "ur"]},
         },
         "required": ["action", "reply"],
     },

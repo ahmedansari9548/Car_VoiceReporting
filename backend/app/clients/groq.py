@@ -17,20 +17,31 @@ from app.prompts import BUY_SYSTEM_PROMPT
 
 _client: Optional[OpenAI] = None
 
+# Domain vocabulary only — no Roman Urdu steering. Whisper detects the
+# language itself; forcing language="ur" mangled every English utterance.
 WHISPER_PROMPT = (
-    "PakWheels Pakistan Urdu Roman Urdu. "
+    "PakWheels Pakistan used cars. "
     "Corolla, Civic, City, Cultus, Alto, Wagon R, Vitz, Prius, Alsvin, "
     "Sportage, Fortuner, Tucson, Oriel, Altis Grande, GLi, XLi, VXR, VXL, "
     "AGS, Jewela, Lumiere, BR-V, Yaris, Aqua, Mehran, Swift, "
     "Lahore, Karachi, Islamabad, Rawalpindi, Faisalabad, Multan, Peshawar, "
-    "lakh, crore, hazaar, paintalees, chahiye, dikhao, budget, "
-    "bechni, khareedni, gaari, inspection"
+    "lakh, crore, inspection, لاکھ, کروڑ, گاڑی"
 )
 
+# Urdu script or English only. No Roman Urdu anywhere in user-facing output.
 FALLBACK_QUESTIONS = {
-    "price_max": "Budget kitna hai?",
-    "city": "Kis sheher mein dhundh rahe hain?",
-    "car_type": "Kis tarah ki gaari chahiye — sedan, hatchback, SUV?",
+    "en": {
+        "price_max": "What is your budget?",
+        "city": "Which city are you looking in?",
+        "car_type": "What type of car do you want — sedan, hatchback, or SUV?",
+        "_default": "Tell me a little more about what you need.",
+    },
+    "ur": {
+        "price_max": "آپ کا بجٹ کتنا ہے؟",
+        "city": "کس شہر میں ڈھونڈ رہے ہیں؟",
+        "car_type": "کس قسم کی گاڑی چاہیے — سیڈان، ہیچ بیک یا ایس یو وی؟",
+        "_default": "ذرا اور بتائیں کہ آپ کو کیا چاہیے۔",
+    },
 }
 
 
@@ -49,6 +60,7 @@ def call_with_tools(
     number_hints: str,
     history: list[dict],
     tools: list[dict],
+    language: str = "en",
 ) -> dict:
     """Call the LLM with tool definitions. Returns tool_calls or fallback_reply."""
 
@@ -111,9 +123,10 @@ def call_with_tools(
         print(f"[GROQ ERROR] {e}")
         traceback.print_exc()
         field = missing[0] if missing else "car_type"
+        bank = FALLBACK_QUESTIONS.get(language, FALLBACK_QUESTIONS["en"])
         return {
             "tool_calls": [],
-            "fallback_reply": FALLBACK_QUESTIONS.get(field, "Aur bataiye?"),
+            "fallback_reply": bank.get(field, bank["_default"]),
         }
 
 
@@ -125,6 +138,5 @@ def transcribe(audio_bytes: bytes, filename: str = "audio.webm") -> str:
         model=settings.STT_MODEL,
         file=audio_file,
         prompt=WHISPER_PROMPT,
-        language="ur",
     )
     return response.text

@@ -152,19 +152,34 @@ def has_inspection_data(llm_result: dict) -> bool:
 
 
 def claims_no_cars(reply: str) -> bool:
+    """
+    Did the LLM claim the inventory is empty?
+
+    These patterns must be SPECIFIC. The old list contained bare "nahi hai"
+    and "نہیں ہے" — phrases that appear in almost any ordinary Urdu sentence,
+    so healthy replies were being flagged and replaced by the override below.
+    """
     lower = reply.lower()
     return any(p in lower for p in [
-        "no car", "koi car nahi", "koi gaari nahi", "nahi mil", "not found",
-        "not available", "no result", "no match", "none found", "dastiyab nahi",
-        "nahi hai", "موجود نہیں", "دستیاب نہیں", "نہیں ہے",
+        "no cars", "no car is", "no cars are", "not available right now",
+        "none are available", "no results", "no matches", "nothing available",
+        "couldn't find any", "could not find any", "no options found",
+        "کوئی گاڑی نہیں", "کوئی گاڑی دستیاب نہیں", "کوئی آپشن نہیں",
+        "دستیاب نہیں ہے", "موجود نہیں ہے", "کچھ نہیں ملا", "کوئی نتیجہ نہیں",
     ])
 
 
-def override_no_cars(total: int, top_cars: list) -> str:
-    car_list = ", ".join(
+def override_no_cars(total: int, top_cars: list, language: str = "en") -> str:
+    """Replacement text when the LLM falsely says inventory is empty."""
+    car_list = "، ".join(
+        f"{c['year']} {c['make']} {c['model']} Rs {c['price']:,}" for c in top_cars
+    ) if language == "ur" else ", ".join(
         f"{c['year']} {c['make']} {c['model']} Rs {c['price']:,}" for c in top_cars
     )
-    return f"Actually {total} options hain! Top picks: {car_list}. Kaunsi pasand hai?"
+
+    if language == "ur":
+        return f"دراصل {total} گاڑیاں موجود ہیں۔ سرِفہرست: {car_list}۔ کون سی پسند ہے؟"
+    return f"There are actually {total} options. Top picks: {car_list}. Which one do you like?"
 
 
 def fallback_reply(cars, total, slots, phase, language="en"):

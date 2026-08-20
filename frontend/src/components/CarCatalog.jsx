@@ -1,133 +1,285 @@
-import { useState, useEffect } from 'react';
+import { useEffect, useMemo, useRef, useState } from 'react';
+import { apiUrl } from '../config';
+import CarCard from './CarCard';
+import { fmtPrice, carYear, carMileage } from '../lib/format';
 
-const fmtPrice = (p) => {
-  if (p >= 10000000) return `${(p / 10000000).toFixed(2)} Crore`;
-  if (p >= 100000) return `${(p / 100000).toFixed(1)} Lakh`;
-  return p?.toLocaleString() ?? '—';
+/**
+ * src/components/CarCatalog.jsx
+ *
+ * Now goes through apiUrl() instead of a hardcoded localhost:8000, and
+ * filters/sorts client side so every control responds instantly. Search is
+ * debounced; the network is only touched on mount and on Refresh.
+ */
+
+const SORTS = {
+  'price-asc': { label: 'Price, low to high', fn: (a, b) => a.price - b.price },
+  'price-desc': { label: 'Price, high to low', fn: (a, b) => b.price - a.price },
+  'year-desc': { label: 'Newest first', fn: (a, b) => carYear(b) - carYear(a) },
+  'km-asc': { label: 'Lowest mileage', fn: (a, b) => carMileage(a) - carMileage(b) },
 };
 
-const fmtKm = (km) => {
-  if (!km) return '—';
-  return km >= 1000 ? `${Math.round(km / 1000)}k km` : `${km} km`;
-};
+const PAGE = 12;
 
-export default function CarCatalog({ onVoiceCommand }) {
+export default function CarCatalog({
+  onAsk,
+  shortlist,
+  onShortlist,
+  compare,
+  onCompare,
+  onBook,
+}) {
   const [cars, setCars] = useState([]);
-  const [loading, setLoading] = useState(true);
-  const [searchQuery, setSearchQuery] = useState('');
-  const [selectedMake, setSelectedMake] = useState('All');
-  const [selectedCity, setSelectedCity] = useState('All');
+  const [state, setState] = useState('loading'); // loading | ready | error
+  const [error, setError] = useState('');
+
+  const [query, setQuery] = useState('');
+  const [debounced, setDebounced] = useState('');
+  const [make, setMake] = useState('All');
+  const [city, setCity] = useState('All');
+  const [gearbox, setGearbox] = useState('All');
+  const [maxPrice, setMaxPrice] = useState(0);
+  const [sort, setSort] = useState('price-asc');
+  const [layout, setLayout] = useState('grid');
+  const [shown, setShown] = useState(PAGE);
+  const searchRef = useRef(null);
 
   useEffect(() => {
-    fetchCars();
-  }, []);
+    const id = setTimeout(() => setDebounced(query.trim().toLowerCase()), 180);
+    return () => clearTimeout(id);
+  }, [query]);
 
-  const fetchCars = async () => {
-    setLoading(true);
+  const load = async () => {
+    setState('loading');
+    setError('');
     try {
-      const res = await fetch('http://localhost:8000/api/cars?limit=100');
-      if (res.ok) {
-        const data = await res.json();
-        setCars(data.cars || []);
-      } else {
-        console.error('Failed to fetch cars');
-      }
+      const res = await fetch(apiUrl('/api/cars?limit=200'));
+      if (!res.ok) throw new Error(`Server replied ${res.status}`);
+      const data = await res.json();
+      const list = data.cars || [];
+      setCars(list);
+      const ceiling = list.reduce((m, c) => Math.max(m, c.price || 0), 0);
+      setMaxPrice(ceiling);
+      setState('ready');
     } catch (err) {
-      console.error('Error fetching catalog cars:', err);
-    } finally {
-      setLoading(false);
+      setError(
+        `Could not load the catalog from ${apiUrl('/api/cars')} — ${err.message}`
+      );
+      setState('error');
     }
   };
 
-  const makes = ['All', ...new Set(cars.map((c) => c.make).filter(Boolean))];
-  const cities = ['All', ...new Set(cars.map((c) => c.city).filter(Boolean))];
+  useEffect(() => {
+    load();
+  }, []);
 
-  const filteredCars = cars.filter((car) => {
-    const title = `${car.model_year || car.year || ''} ${car.make || ''} ${car.model || ''} ${car.variant || ''}`.toLowerCase();
-    const matchesQuery = !searchQuery || title.includes(searchQuery.toLowerCase()) || car.city?.toLowerCase().includes(searchQuery.toLowerCase());
-    const matchesMake = selectedMake === 'All' || car.make === selectedMake;
-    const matchesCity = selectedCity === 'All' || car.city === selectedCity;
-    return matchesQuery && matchesMake && matchesCity;
-  });
+  const ceiling = useMemo(
+    () => cars.reduce((m, c) => Math.max(m, c.price || 0), 0),
+    [cars]
+  );
+  const makes = useMemo(
+    () => ['All', ...new Set(cars.map((c) => c.make).filter(Boolean))].sort(),
+    [cars]
+  );
+  const cities = useMemo(
+    () => ['All', ...new Set(cars.map((c) => c.city).filter(Boolean))].sort(),
+    [cars]
+  );
+
+  const filtered = useMemo(() => {
+    const out = cars.filter((car) => {
+      const hay = `${carYear(car) ?? ''} ${car.make ?? ''} ${car.model ?? ''} ${
+        car.variant ?? ''
+      } ${car.city ?? ''} ${car.color ?? ''}`.toLowerCase();
+      if (debounced && !hay.includes(debounced)) return false;
+      if (make !== 'All' && car.make !== make) return false;
+      if (city !== 'All' && car.city !== city) return false;
+      if (gearbox !== 'All' && car.transmission !== gearbox) return false;
+      if (maxPrice && car.price > maxPrice) return false;
+      return true;
+    });
+    return out.sort(SORTS[sort].fn);
+  }, [cars, debounced, make, city, gearbox, maxPrice, sort]);
+
+  useEffect(() => setShown(PAGE), [debounced, make, city, gearbox, maxPrice, sort]);
+
+  const activeFilters =
+    (debounced ? 1 : 0) +
+    (make !== 'All' ? 1 : 0) +
+    (city !== 'All' ? 1 : 0) +
+    (gearbox !== 'All' ? 1 : 0) +
+    (maxPrice && maxPrice < ceiling ? 1 : 0);
+
+  const clearAll = () => {
+    setQuery('');
+    setMake('All');
+    setCity('All');
+    setGearbox('All');
+    setMaxPrice(ceiling);
+    searchRef.current?.focus();
+  };
 
   return (
-    <div className="catalog-container">
-      <div className="catalog-header">
-        <div className="catalog-title">
-          <h2>🚗 Available Car Menu</h2>
-          <p>Browse our catalog and launch voice commands directly on any car.</p>
+    <section className="catalog">
+      <header className="catalog-head">
+        <div>
+          <p className="eyebrow">Live inventory</p>
+          <h2 className="catalog-title">
+            {state === 'ready' ? (
+              <>
+                <span className="mono count">{filtered.length}</span> cars ready to view
+              </>
+            ) : (
+              'Loading inventory'
+            )}
+          </h2>
+        </div>
+        <button type="button" className="btn btn-ghost" onClick={load}>
+          Refresh
+        </button>
+      </header>
+
+      <div className="filters">
+        <div className="field field-grow">
+          <input
+            ref={searchRef}
+            className="input"
+            type="search"
+            placeholder="Search make, model, city or colour"
+            value={query}
+            onChange={(e) => setQuery(e.target.value)}
+            aria-label="Search inventory"
+          />
         </div>
 
-        {/* Filters */}
-        <div className="catalog-filters">
-          <input
-            type="text"
-            className="search-input"
-            placeholder="Search make, model, city..."
-            value={searchQuery}
-            onChange={(e) => setSearchQuery(e.target.value)}
-          />
-          
-          <select value={selectedMake} onChange={(e) => setSelectedMake(e.target.value)} className="filter-select">
-            <option value="All">All Makes</option>
-            {makes.filter(m => m !== 'All').map((m) => (
-              <option key={m} value={m}>{m}</option>
-            ))}
-          </select>
+        <select className="select" value={make} onChange={(e) => setMake(e.target.value)} aria-label="Make">
+          {makes.map((m) => (
+            <option key={m} value={m}>{m === 'All' ? 'All makes' : m}</option>
+          ))}
+        </select>
 
-          <select value={selectedCity} onChange={(e) => setSelectedCity(e.target.value)} className="filter-select">
-            <option value="All">All Cities</option>
-            {cities.filter(c => c !== 'All').map((c) => (
-              <option key={c} value={c}>{c}</option>
-            ))}
-          </select>
+        <select className="select" value={city} onChange={(e) => setCity(e.target.value)} aria-label="City">
+          {cities.map((c) => (
+            <option key={c} value={c}>{c === 'All' ? 'All cities' : c}</option>
+          ))}
+        </select>
+
+        <select className="select" value={gearbox} onChange={(e) => setGearbox(e.target.value)} aria-label="Transmission">
+          <option value="All">Any gearbox</option>
+          <option value="Automatic">Automatic</option>
+          <option value="Manual">Manual</option>
+        </select>
+
+        <select className="select" value={sort} onChange={(e) => setSort(e.target.value)} aria-label="Sort">
+          {Object.entries(SORTS).map(([k, v]) => (
+            <option key={k} value={k}>{v.label}</option>
+          ))}
+        </select>
+
+        <div className="layout-toggle" role="group" aria-label="Layout">
+          <button
+            type="button"
+            className={layout === 'grid' ? 'on' : ''}
+            onClick={() => setLayout('grid')}
+            aria-pressed={layout === 'grid'}
+          >
+            Grid
+          </button>
+          <button
+            type="button"
+            className={layout === 'list' ? 'on' : ''}
+            onClick={() => setLayout('list')}
+            aria-pressed={layout === 'list'}
+          >
+            List
+          </button>
         </div>
       </div>
 
-      {loading ? (
-        <div className="catalog-loading">
-          <div className="spinner"></div>
-          <p>Loading cars menu...</p>
-        </div>
-      ) : filteredCars.length === 0 ? (
-        <div className="empty-catalog">
-          <p>No cars found matching your filters.</p>
-        </div>
-      ) : (
-        <div className="catalog-grid">
-          {filteredCars.map((car) => {
-            const year = car.model_year || car.year;
-            const fallback = `https://placehold.co/400x250/1a2234/ffffff?text=${encodeURIComponent(car.make + ' ' + car.model)}`;
-            return (
-              <div key={car.id} className="catalog-card">
-                <div className="catalog-card-img-wrap">
-                  <img
-                    src={car.image_url || fallback}
-                    alt={`${year} ${car.make} ${car.model}`}
-                    onError={(e) => { e.currentTarget.src = fallback; }}
-                  />
-                  <span className="price-badge">Rs {fmtPrice(car.price)}</span>
-                </div>
-                <div className="catalog-card-content">
-                  <h3>{year} {car.make} {car.model} {car.variant || ''}</h3>
-                  <div className="catalog-card-specs">
-                    <span>📍 {car.city}</span>
-                    <span>⚙ {car.transmission}</span>
-                    <span>🛣 {fmtKm(car.mileage_km || car.mileage)}</span>
-                    {car.color && <span>🎨 {car.color}</span>}
-                  </div>
-                  <button
-                    className="btn-voice-command"
-                    onClick={() => onVoiceCommand(car)}
-                  >
-                    🎙️ Voice Command with AI
-                  </button>
-                </div>
-              </div>
-            );
-          })}
+      {ceiling > 0 && (
+        <div className="price-rail">
+          <label htmlFor="maxprice">
+            Under <b className="mono">Rs {fmtPrice(maxPrice || ceiling)}</b>
+          </label>
+          <input
+            id="maxprice"
+            type="range"
+            min={Math.min(...cars.map((c) => c.price || 0), ceiling)}
+            max={ceiling}
+            step={50000}
+            value={maxPrice || ceiling}
+            onChange={(e) => setMaxPrice(Number(e.target.value))}
+          />
+          {activeFilters > 0 && (
+            <button type="button" className="btn btn-quiet" onClick={clearAll}>
+              Clear {activeFilters} filter{activeFilters > 1 ? 's' : ''}
+            </button>
+          )}
         </div>
       )}
-    </div>
+
+      {state === 'loading' && (
+        <div className="catalog-grid">
+          {Array.from({ length: 6 }).map((_, i) => (
+            <div className="card-skeleton" key={i} />
+          ))}
+        </div>
+      )}
+
+      {state === 'error' && (
+        <div className="notice notice-error">
+          <p>{error}</p>
+          <p className="notice-hint">
+            Check that the backend is up and that this origin is listed in
+            CORS_ORIGINS.
+          </p>
+          <button type="button" className="btn btn-primary" onClick={load}>
+            Try again
+          </button>
+        </div>
+      )}
+
+      {state === 'ready' && filtered.length === 0 && (
+        <div className="notice">
+          <p>Nothing matches those filters.</p>
+          <button type="button" className="btn btn-primary" onClick={clearAll}>
+            Clear filters
+          </button>
+        </div>
+      )}
+
+      {state === 'ready' && filtered.length > 0 && (
+        <>
+          <div className={layout === 'grid' ? 'catalog-grid' : 'catalog-list'}>
+            {filtered.slice(0, shown).map((car) => (
+              <CarCard
+                key={car.id}
+                car={car}
+                variant={layout}
+                shortlisted={shortlist.some((c) => c.id === car.id)}
+                comparing={compare.some((c) => c.id === car.id)}
+                compareDisabled={compare.length >= 3}
+                onPick={onAsk}
+                onAsk={onAsk}
+                onShortlist={onShortlist}
+                onCompare={onCompare}
+                onBook={onBook}
+              />
+            ))}
+          </div>
+
+          {shown < filtered.length && (
+            <div className="more">
+              <button
+                type="button"
+                className="btn btn-ghost"
+                onClick={() => setShown((s) => s + PAGE)}
+              >
+                Show {Math.min(PAGE, filtered.length - shown)} more
+              </button>
+            </div>
+          )}
+        </>
+      )}
+    </section>
   );
 }

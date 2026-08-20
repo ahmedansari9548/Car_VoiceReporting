@@ -265,9 +265,11 @@ def process_turn(conn, session_id: Optional[str], text: str) -> TurnOut:
         total = 1 if selected_car else 0
 
     # ── 7. LLM ──
-    from app.services.Numbers import hint_line
+    # NOTE: app.services.Numbers was removed. It returned 1 for "1 karod" and
+    # every price now goes through app.services.prices.parse_price() instead.
+    # The import lived here and raised ImportError on EVERY turn.
     missing = missing_filters(slots)
-    hints = hint_line(text, missing[0] if missing else None)
+    hints = ""
 
     ctx = "\n\n".join(filter(None, [
         build_state_context(phase, slots, selected_car, lang),
@@ -275,7 +277,7 @@ def process_turn(conn, session_id: Optional[str], text: str) -> TurnOut:
         build_inventory_context_from_cars(cars or []),
     ]))
 
-    action = call_llm(conn, session_id, text, slots, missing, ctx, hints)
+    action = call_llm(conn, session_id, text, slots, missing, ctx, hints, lang)
 
     # ── 8. OVERRIDES (searching only — never rewrite filters mid-booking) ──
     if not is_detail and phase == "searching":

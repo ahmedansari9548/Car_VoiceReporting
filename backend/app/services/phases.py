@@ -78,7 +78,7 @@ def run_search(conn, filters: dict, sort: dict | None = None):
 # LLM CALL
 # ═══════════════════════════════════════════════════════════════
 
-def call_llm(conn, session_id, text, slots, missing, context, hints) -> dict:
+def call_llm(conn, session_id, text, slots, missing, context, hints, language: str = "en") -> dict:
     action = {
         "action": "ask_question", "reply": "", "need": None,
         "car_index": 0, "inspection_data": {},
@@ -90,6 +90,7 @@ def call_llm(conn, session_id, text, slots, missing, context, hints) -> dict:
             catalog_context=context, number_hints=hints,
             history=turn_repo.get_history(conn, session_id, last_n=HISTORY_TURNS),
             tools=get_tool_schemas(),
+            language=language,
         )
         tool_calls = response.get("tool_calls", [])
     except Exception as e:
@@ -335,7 +336,7 @@ def handle_ask_ai(conn, session_id, text, parsed_car, slots, language, turn_inde
         build_inventory_context_from_cars([car]),
     ]))
 
-    action = call_llm(conn, session_id, text, slots, [], context, "")
+    action = call_llm(conn, session_id, text, slots, [], context, "", language)
     reply = (action.get("reply") or "").strip()
 
     wrong = guard_wrong_car(reply, car, language)

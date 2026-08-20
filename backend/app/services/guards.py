@@ -52,11 +52,12 @@ FIELD_KEYWORDS = {
 # GUARDS
 # ═══════════════════════════════════════════════════════════════
 
-def guard_no_false_empty(reply: str, total: int, cars: list) -> str | None:
+def guard_no_false_empty(reply: str, total: int, cars: list,
+                         language: str = "en") -> str | None:
     """LLM claimed no cars exist, but they do."""
     if total and total > 0 and claims_no_cars(reply):
         print("[GUARD] false 'no cars' claim")
-        return override_no_cars(total, (cars or [])[:3])
+        return override_no_cars(total, (cars or [])[:3], language)
     return None
 
 
@@ -142,7 +143,7 @@ def run_all_guards(reply: str, total: int, cars: list,
                    collected: dict, language: str) -> str:
     """Run every guard. First hit wins. Returns original reply if all pass."""
     for result in [
-        guard_no_false_empty(reply, total or 0, cars or []),
+        guard_no_false_empty(reply, total or 0, cars or [], language),
         guard_wrong_car(reply, selected_car if phase != "searching" else None, language),
         guard_inspection_repeat(reply, phase, collected, language),
         guard_selected_stalling(reply, phase, selected_car, language),
